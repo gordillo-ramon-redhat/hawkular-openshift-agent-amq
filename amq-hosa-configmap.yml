@@ -1,0 +1,29 @@
+apiVersion: v1
+data:
+  hawkular-openshift-agent: |
+    endpoints:
+    - type: jolokia
+      protocol: https
+      port: 8778
+      path: /jolokia/read
+      tls:
+        skip_certificate_validation: true
+      collection_interval: 10s
+      metrics:
+      - name: org.apache.activemq:type=Broker,brokerName=${POD:name}#TotalConnectionsCount
+        description: Total Connections Count
+        units: custom:connections
+        type: counter
+        id: TotalConnectionsCount
+        tags:
+          metric_name: TotalConnectionsCount
+      - name: org.apache.activemq:type=Broker,brokerName=${POD:name}#TotalEnqueueCount
+        description: Total Enqueue Count
+        units: custom:messages
+        type: counter
+        id: TotalEnqueueCount
+        tags:
+          metric_name: TotalEnqueueCount
+kind: ConfigMap
+metadata:
+  name: amq-hosa-configmap
